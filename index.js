@@ -23,8 +23,8 @@ const STATE_LABELS = {
 	starting: '启动中…',
 	waiting: '等待中…',
 	'host-scanning': '正在扫描本地世界…',
-	'host-starting': '开房启动中…',
-	'host-ok': '开房成功',
+	'host-starting': '房间启动中…',
+	'host-ok': '房间创建成功',
 	'guest-connecting': '连接中…',
 	'guest-starting': '加入启动中…',
 	'guest-ok': '已加入',
@@ -59,10 +59,6 @@ export async function activate(api) {
 		.tc-error { color: var(--color-red); font-size: 0.8rem; }
 		.tc-hint { color: var(--color-secondary); font-size: 0.78rem; }
 		.tc-status-line { color: var(--color-secondary); font-size: 0.82rem; }
-		.tc-navbtn-active {
-			color: var(--color-button-text-selected);
-			background: var(--color-button-bg-selected);
-		}
 		.tc-modal-overlay {
 			position: fixed; inset: 0; z-index: 9999;
 			display: flex; align-items: center; justify-content: center;
@@ -243,7 +239,7 @@ export async function activate(api) {
 			]
 			for (const node of nodes) pairs.push(['public_nodes', node])
 			await control(buildPath('/state/scanning', pairs))
-			statusMsg.value = '正在开房，等待房间号…'
+			statusMsg.value = '正在创建房间，等待房间号…'
 		} catch (error) {
 			errorMsg.value = String(error?.message || error)
 			await stop()
@@ -477,7 +473,7 @@ export async function activate(api) {
 					class: 'w-full',
 					disabled: busy.value,
 					onClick: () => void modal.open({ type: 'host' }),
-				}, () => '开房'),
+				}, () => '创建房间'),
 				h('div', { class: 'tc-row' }, [
 					h(Input, {
 						modelValue: joinCode.value,
@@ -528,6 +524,9 @@ export async function activate(api) {
 	api.routes.add({
 		path: ROUTE_PATH,
 		name: 'terracotta',
+		sidebar: showPage,
+		title: '陶瓦联机',
+		icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
 		component: {
 			name: 'TerracottaPage',
 			setup() {
@@ -549,67 +548,6 @@ export async function activate(api) {
 						]),
 						modal.vnode(),
 					])
-			},
-		},
-	})
-
-	// Nav-rail icon that opens the page. Styled with the same classes as the
-	// launcher's own NavButton so it sits in the rail identically, including the
-	// active highlight (the reactive currentPath drives re-render on navigation).
-	if (showPage) api.slots.add('navbar.bottom', {
-		id: 'terracotta-nav',
-		component: {
-			name: 'TerracottaNavButton',
-			setup() {
-				return () => {
-					const isActive = api.router.currentPath.value.startsWith(ROUTE_PATH)
-					const classes = [
-						'button-animation',
-						'border-none',
-						'cursor-pointer',
-						'w-12',
-						'h-12',
-						'rounded-full',
-						'flex',
-						'items-center',
-						'justify-center',
-						'text-2xl',
-						'transition-all',
-						'bg-transparent',
-						'hover:bg-button-bg',
-						'hover:text-contrast',
-						isActive ? 'tc-navbtn-active' : 'text-primary',
-					].join(' ')
-					return h(
-						'button',
-						{
-							class: classes,
-							title: '陶瓦联机',
-							onClick: () => api.router.push(ROUTE_PATH),
-						},
-						[
-							h(
-								'svg',
-								{
-									width: 26,
-									height: 26,
-									viewBox: '0 0 24 24',
-									fill: 'none',
-									stroke: 'currentColor',
-									'stroke-width': 2,
-									'stroke-linecap': 'round',
-									'stroke-linejoin': 'round',
-									style: isActive ? 'filter: drop-shadow(0 0 0.5rem black)' : '',
-								},
-								[
-									h('circle', { cx: 12, cy: 12, r: 10 }),
-									h('path', { d: 'M2 12h20' }),
-									h('path', { d: 'M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20' }),
-								],
-							),
-						],
-					)
-				}
 			},
 		},
 	})
