@@ -1,0 +1,47 @@
+{
+	"id": "cn.terracotta.celestial",
+	"name": "陶瓦联机",
+	"description": "接入陶瓦（Terracotta）联机：开一个局域网世界并生成房间号分享给朋友，或输入房间号加入别人的世界。免端口转发。首次使用会下载陶瓦程序。可在右侧边栏卡片或左侧栏的联机页面使用。",
+	"version": "1.0.0",
+	"author": "Celestial Launcher",
+	"homepage": "https://github.com/burningtnt/Terracotta",
+	"type": "ui",
+	"api_version": 1,
+	"entry": "index.js",
+	"permissions": [
+		"style",
+		"slot:sidebar.after-account",
+		"slot:navbar.bottom",
+		"route",
+		"storage",
+		"sidecar",
+		"lan",
+		"hostapi:auth.default_username",
+		"network:gitee.com",
+		"network:github.com",
+		"network:api.github.com"
+	],
+	"settings": [
+		{
+			"key": "show_page",
+			"label": "在左侧栏显示联机页面",
+			"description": "在左侧导航栏显示进入联机页面的图标。",
+			"type": "toggle",
+			"default": "true"
+		},
+		{
+			"key": "show_card",
+			"label": "在右侧栏显示联机卡片",
+			"description": "在右侧边栏（游玩账户下方）显示联机卡片。",
+			"type": "toggle",
+			"default": "true"
+		},
+		{
+			"key": "public_nodes",
+			"label": "中继节点",
+			"description": "陶瓦使用的公共中继节点，每行或用逗号分隔一个。一般保持默认即可。",
+			"type": "text",
+			"default": "https://etnode.zkitefly.eu.org/node1,https://etnode.zkitefly.eu.org/node2"
+		}
+	]
+}
